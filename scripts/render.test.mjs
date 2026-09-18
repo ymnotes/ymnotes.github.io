@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {home,listing,article} from './render.mjs';
+const site={name:'ymnotes',bio:'<script>unsafe</script>'};const row={id:'00000000-0000-4000-8000-000000000001',title:'<img src=x onerror=alert(1)>',type:'随想',tags:['"<bad>'],summary:'text',date:'2026-09-18',blocks:[{type:'paragraph',rich:[{text:'Link',url:'javascript:alert(1)'}],children:[]}]};
+test('published content is escaped and unsafe links are dropped',()=>{const html=article(site,row);assert(!html.includes('javascript:'));assert(!html.includes('<img src=x'));assert(html.includes('&lt;img'));assert(!home(site).includes('<script>unsafe'));});
+test('static links work from deep paths and no login needed for navigation',()=>{const html=listing(site,[row]);assert(html.includes('/notes/'+row.id+'/'));assert(!html.includes('signin'));assert(!html.includes('chatgpt.site'));assert(html.includes('data-tags="[&quot;'));});
