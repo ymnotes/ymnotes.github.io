@@ -4,6 +4,10 @@
 
 浅灰桌面和移动端页面；分类、标签和文章详情。内容仅来自工作台的已发布内容导出，不含草稿、原始输入或连接密钥。
 
-目前仅手动同步：在 Actions 中选择 “Sync published notes and deploy Pages”，点击 Run workflow。修改源码推送也会部署。没有定时任务，以后可改为每天一次。撤回/修改要等下一次成功部署才生效。上游失败会中止部署并保留旧版，不会用空列表覆盖网站。
+## 手动同步
 
-仓库变量 `CONTENT_EXPORT_URL` 指向受保护的发布内容导出端点，密钥 `CONTENT_EXPORT_TOKEN` 只放 GitHub Actions secrets。输出只包含静态 HTML、CSS、JS 和图片。后台单独托管。
+目前没有定时任务。对维护助手说“同步 ymnotes 网站”，由助手在本地读取后台的公开内容导出，运行生成器，核对结果并把 `_site` 复制到本仓库 `docs` 后推送。GitHub Pages 从 main 分支的 docs 目录发布。用户后台中的发布、编辑和撤回操作，在下一次手动同步成功后才对访客生效。
+
+后台凭据仅用于本地读取原后台，不上传到 GitHub，不保存在仓库或 Actions secrets。导出端点只返回已发布内容；Notion 连接失败会中止生成，保留上次成功的网站。完整替换 docs 目录可以移除已撤回页面。
+
+生成器读取本地运行环境的 `CONTENT_EXPORT_URL` 与 `CONTENT_EXPORT_TOKEN`。授权令牌不要写入文件或输出日志。公开源码可以审查，产物中只有 HTML/CSS/JS/图片。以后如需每天同步一次，再单独配置自动化与受限凭据。

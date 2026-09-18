@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ymnotes.github.io/sitemap.xml
